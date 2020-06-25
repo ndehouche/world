@@ -1,4 +1,5 @@
 library(lpSolve)
+library(rworldmap)
 df<-read.csv("World Domination.csv", header=TRUE)
 
 
@@ -19,6 +20,13 @@ m[as.character(df$country_code[i]),as.character(df$country_border_code[i])]=1
 }
 
 
+for (i in 1:249) {
+degree[i]<-sum(m[i,])
+        
+    }
+
+
+#Dominating set
 
 f.obj <- replicate(249, 1)
 f.dir <- replicate(249,">=")
@@ -32,4 +40,24 @@ if (sum(m[i,])==0){
 }
 lp("min", f.obj, m, f.dir, f.rhs, int.vec = 1:249, all.bin = TRUE)
 x<-lp("min", f.obj, m, f.dir, f.rhs, int.vec = 1:249, all.bin = TRUE)$solution
+rownames(m[which( (x==1 | degree=0) ),])
+
+
+#Double-dominating set
+f.rhs <- replicate(249, 2)
+for (i in 1:249) {
+    if (sum(m[i,])==0){
+        f.rhs[i]<-0
+        
+    }
+else if (sum(m[i,])==1){
+        f.rhs[i]<-1
+        
+    }
+    
+}
+lp("min", f.obj, m, f.dir, f.rhs, int.vec = 1:249, all.bin = TRUE)
+x<-lp("min", f.obj, m, f.dir, f.rhs, int.vec = 1:249, all.bin = TRUE)$solution
 rownames(m[which(x==1),])
+
+rownames(m[which( (x==1 | degree==1 | degree=0) ),])
