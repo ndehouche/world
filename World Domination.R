@@ -40,7 +40,7 @@ if (sum(m[i,])==0){
 }
 lp("min", f.obj, m, f.dir, f.rhs, int.vec = 1:249, all.bin = TRUE)
 x<-lp("min", f.obj, m, f.dir, f.rhs, int.vec = 1:249, all.bin = TRUE)$solution
-rownames(m[which( (x==1 | degree=0) ),])
+rownames(m[which( (x==1) |(degree=0) ),])
 
 
 #Double-dominating set
@@ -60,4 +60,4 @@ lp("min", f.obj, m, f.dir, f.rhs, int.vec = 1:249, all.bin = TRUE)
 x<-lp("min", f.obj, m, f.dir, f.rhs, int.vec = 1:249, all.bin = TRUE)$solution
 rownames(m[which(x==1),])
 
-rownames(m[which( (x==1 | degree==1 | degree=0) ),])
+rownames(m[which( (x==1) |(degree==1) |(degree=0) ),])
