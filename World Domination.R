@@ -8,7 +8,7 @@ m=matrix(0,nrow=249, ncol=249, byrow = TRUE)
 x<-unique(df$country_code)
 rownames(m) <- as.character(x)
 colnames(m) <- as.character(x)
-degree<-matrix(0,nrow=249, ncol=1)
+deg<-matrix(0,nrow=249, ncol=1)
 
 
 for (i in 1:471) {
@@ -21,7 +21,7 @@ m[as.character(df$country_code[i]),as.character(df$country_border_code[i])]=1
 
 
 for (i in 1:249) {
-degree[i]<-sum(m[i,])
+deg[i]<-sum(m[i,])
         
     }
 
@@ -40,7 +40,9 @@ if (sum(m[i,])==0){
 }
 lp("min", f.obj, m, f.dir, f.rhs, int.vec = 1:249, all.bin = TRUE)
 x<-lp("min", f.obj, m, f.dir, f.rhs, int.vec = 1:249, all.bin = TRUE)$solution
-rownames(m[which( (x==1) |(degree=0) ),])
+
+rownames(m[which(x==1),])
+rownames(m[which( (x==1) |(deg==0) ),])
 
 
 #Double-dominating set
@@ -58,6 +60,6 @@ else if (sum(m[i,])==1){
 }
 lp("min", f.obj, m, f.dir, f.rhs, int.vec = 1:249, all.bin = TRUE)
 x<-lp("min", f.obj, m, f.dir, f.rhs, int.vec = 1:249, all.bin = TRUE)$solution
-rownames(m[which(x==1),])
 
-rownames(m[which( (x==1) |(degree==1) |(degree=0) ),])
+
+rownames(m[which( (x==1) |(deg==1) |(deg==0) ),])
