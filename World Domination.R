@@ -1,8 +1,9 @@
-df<-read.csv("World Map Graph.csv", header=TRUE)
+library(lpSolve)
+df<-read.csv("World Domination.csv", header=TRUE)
 
 
 
-m=matrix(0,nrow=249, ncol=249)
+m=matrix(0,nrow=249, ncol=249, byrow = TRUE)
 x<-unique(df$country_code)
 rownames(m) <- as.character(x)
 colnames(m) <- as.character(x)
@@ -16,34 +17,19 @@ m[as.character(df$country_code[i]),as.character(df$country_border_code[i])]=1
 
 }
 }
-for (i in 1:249){
-degree[i]=sum(m[i,])
-}
-
-dom<-matrix(0,nrow=249, ncol=1)
-bool<-TRUE
 
 
-while (bool){
-if (max(degree)!=0){
-dom[which(degree==max(degree))]<-1
 
-    for (i in 1:249){
-       if (m[which(degree==max(degree)), i]==1){
-           
-           m[i,]=0
-           m[,i]=0
-       }
-    }
-m[which(degree==max(degree)),]=0
-m[,which(degree==max(degree))]=0
-for (i in 1:249){
-    degree[i]=sum(m[i,])
+f.obj <- replicate(249, 1)
+f.dir <- replicate(249,">=")
+f.rhs <- replicate(249, 1)
+for (i in 1:249) {
+if (sum(m[i,])==0){
+    f.rhs[i]<-0
+    
 }
 
 }
-
-
-else{bool=FALSE}
-
-}
+lp("min", f.obj, m, f.dir, f.rhs, int.vec = 1:249, all.bin = TRUE)
+x<-lp("min", f.obj, m, f.dir, f.rhs, int.vec = 1:249, all.bin = TRUE)$solution
+rownames(m[which(x==1),])
